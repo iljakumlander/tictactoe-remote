@@ -1,5 +1,7 @@
-# tictactoe-remote
-A remote service to support online multiplayer for the game
+# Knots and crosses multiplayer server
+A remote service to support online multiplayer for the game.
+
+Refer to https://github.com/iljakumlander/tictactoe for client code.
 
 ## Installation
 ```sh
@@ -12,3 +14,7 @@ Application builds on port `5000` by default, to change default value, create `.
 PORT=5000
 ```
 
+## Run
+```sh
+npm start
+```
