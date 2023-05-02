@@ -20,29 +20,46 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-});
+}); 
 
 io.on("connection", (socket) => {
-    console.log(`User connected with ID: ${socket.id}`);
-
-    socket.on('player ready', name => {
-        console.log("player ready", name);
+    socket.on('player ready', ({ id, name, remote }) => {
         socket.broadcast.emit('player ready', {
             id: socket.id,
             name,
+            remote,
+        });
+    });
+
+    socket.on('player accept', ({ id, name, remote }) => {
+        socket.to(remote).emit('player accepted', {
+            id: id,
+            name,
+            remote,
+        });
+
+        socket.to(id).emit('player accepted', {
+            id: id,
+            name,
+            remote,
         });
     });
 
     socket.on('player move', ({ to, from, area }) => {
-        console.log("player move to", area, from);
         socket.to(to).emit('player move', {
             from,
             area,
         });
     });
 
+    socket.on('new game', ({ to, from, datetime }) => {
+        socket.to(to).emit('new game', {
+            from,
+            datetime: datetime,
+        });
+    });
+
     socket.on("disconnect", () => {
-        console.log(`User disconnected with ID: ${socket.id}`);
         socket.broadcast.emit('user disconnected', socket.id);
     });
 });
